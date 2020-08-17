@@ -12,10 +12,9 @@ class LinksController < ApplicationController
 
   # GET /links/AsddE33Xd
   def show
-    randomString = params[:randomString]
+    randomString = params[:id]
 
     entity = Link.find_by("shortUrl like ?", "%#{randomString}%")
-
     entity.viewsCount += 1
     entity.save
 
