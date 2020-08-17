@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class LinksController < ApplicationController
-  before_action :set_link, only: [:show, :update, :destroy]
+  before_action :set_link, only: [ :update, :destroy]
 
   # GET /links
   def index
@@ -10,9 +10,16 @@ class LinksController < ApplicationController
     render json: @links
   end
 
-  # GET /links/1
+  # GET /links/AsddE33Xd
   def show
-    render json: @link
+    randomString = params[:randomString]
+
+    entity = Link.find_by("shortUrl like ?", "%#{randomString}%")
+
+    entity.viewsCount += 1
+    entity.save
+
+    redirect_back fallback_location: entity.originalUrl
   end
 
   # POST /links
