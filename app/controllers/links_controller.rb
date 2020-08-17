@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class LinksController < ApplicationController
   before_action :set_link, only: [:show, :update, :destroy]
 
@@ -15,8 +17,17 @@ class LinksController < ApplicationController
 
   # POST /links
   def create
-    @link = Link.new(link_params)
+    @link = Link.new(link_para_post)
 
+    stringRandom = SecureRandom.hex(6)
+    entity = @link
+    entity.viewsCount = 0;
+    entity.shortUrl = "http://localhost:3000/links/" + stringRandom
+
+    if !entity.originalUrl.include?('http') && !entity.originalUrl.include?('https')
+      entity.originalUrl = "http://" + entity.originalUrl
+    end
+    
     if @link.save
       render json: @link, status: :created, location: @link
     else
@@ -48,4 +59,9 @@ class LinksController < ApplicationController
     def link_params
       params.require(:link).permit(:shortUrl, :originalUrl, :viewsCount)
     end
+
+    def link_para_post
+      params.require(:link).permit(:originalUrl)
+    end
+
 end
