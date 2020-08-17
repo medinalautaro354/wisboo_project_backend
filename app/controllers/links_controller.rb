@@ -7,7 +7,7 @@ class LinksController < ApplicationController
   def index
     @links = Link.all
 
-    render json: @links
+    render json: @links.to_json(:except => [:created_at, :updated_at])
   end
 
   # GET /links/AsddE33Xd
